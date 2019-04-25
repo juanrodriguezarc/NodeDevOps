@@ -1,3 +1,8 @@
+image: gitlab/dind
+
+services:
+  - docker:dind
+
 stages:
   - build
   - test
@@ -9,7 +14,6 @@ cache:
     - node_modules/
 
 install_dependencies:
-  image: node:latest
   stage: build
   script:
     - npm install --prefix ./NodeDevOps/
@@ -20,26 +24,19 @@ install_dependencies:
     - build
 
 testing_testing:
-  image: node:latest
   stage: test
   script: npm test --prefix ./NodeDevOps/
   tags:
     - test
 
 build-container:
-  image: gitlab/dind
-  services:
-    - docker:dind
   stage: container
   script: docker build -t registry.gitlab.com/juanrodriguezarc/nodedevops . && docker push registry.gitlab.com/juanrodriguezarc/nodedevops
   tags:
     - docker
 
 deploy-heroku:
-  image: gitlab/dind
   stage: deploy
-  services:
-    - docker:dind  
   script: docker login --username=_ --password=1502b53d-72ed-4218-941d-d95595a12c24 registry.heroku.com && docker build -t registry.heroku.com/fierce-temple-56849/web . && docker push registry.heroku.com/fierce-temple-56849/web
   tags:
     - docker
