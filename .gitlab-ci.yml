@@ -3,6 +3,7 @@ image: node:latest
 stages:
   - build
   - test
+  - container
 
 cache:
   paths:
@@ -23,3 +24,9 @@ testing_testing:
   script: npm test --prefix ./NodeDevOps/
   tags:
     - test
+
+build-container:
+  stage: container
+  script: docker build -t registry.gitlab.com/juanrodriguezarc/nodedevops . && docker push registry.gitlab.com/juanrodriguezarc/nodedevops
+  tags:
+    - docker
