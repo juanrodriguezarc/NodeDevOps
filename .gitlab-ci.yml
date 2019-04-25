@@ -1,3 +1,10 @@
+image: docker:latest
+services:
+  - docker:dind
+
+variables:
+  DOCKER_DRIVER: overlay
+  
 stages:
   - deploy
 
@@ -5,7 +12,7 @@ deploy-heroku:
   stage: deploy
   script: 
    - docker login --username=_ --password=1502b53d-72ed-4218-941d-d95595a12c24 registry.heroku.com
-   - docker build -t registry.heroku.com/fierce-temple-56849/web .
+   - docker build -f Dockerfile --iidfile imageid.txt -t registry.heroku.com/fierce-temple-56849/web .
    - docker push registry.heroku.com/fierce-temple-56849/web
    - apk add --no-cache curl
    - echo "Docker Image ID is $(cat imageid.txt)"
