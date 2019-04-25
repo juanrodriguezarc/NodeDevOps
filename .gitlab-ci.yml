@@ -1,40 +1,21 @@
 stages:
-  - build
-  - test
-  - container
   - deploy
-
-cache:
-  paths:
-    - node_modules/
-
-install_dependencies:
-  stage: build
-  script:
-    - npm install --prefix ./NodeDevOps/
-  artifacts:
-    paths:
-      - node_modules/
-  tags:
-    - build
-
-testing_testing:
-  stage: test
-  script: npm test --prefix ./NodeDevOps/
-  tags:
-    - test
-
-build-container:
-  stage: container
-  script: docker build -t registry.gitlab.com/juanrodriguezarc/nodedevops . && docker push registry.gitlab.com/juanrodriguezarc/nodedevops
-  tags:
-    - build
 
 deploy-heroku:
   stage: deploy
-  script: docker login --username=_ --password=1502b53d-72ed-4218-941d-d95595a12c24 registry.heroku.com && docker build -t registry.heroku.com/fierce-temple-56849/web . && docker push registry.heroku.com/fierce-temple-56849/web
+  script: 
+   - docker login --username=_ --password=1502b53d-72ed-4218-941d-d95595a12c24 registry.heroku.com
+   - docker build -t registry.heroku.com/fierce-temple-56849/web .
+   - docker push registry.heroku.com/fierce-temple-56849/web
+   - apk add --no-cache curl
+   - echo "Docker Image ID is $(cat imageid.txt)"
+   - |-
+    curl -X PATCH https://api.heroku.com/apps/fierce-temple-56849/formation --header "Content-Type: application/json" --header "Accept: application/vnd.heroku+json; version=3.docker-releases" --header "Authorization: Bearer 1502b53d-72ed-4218-941d-d95595a12c24" --data '{ "updates": [ { "type": "web", "docker_image": "'$(cat imageid.txt)'" } ] }'
   tags:
     - build
+
+
+    
 
 
     
