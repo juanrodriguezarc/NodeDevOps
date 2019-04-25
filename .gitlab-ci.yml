@@ -1,4 +1,8 @@
 image: node:latest
+image: gitlab/dind
+
+services:
+  - docker:dind
 
 stages:
   - build
