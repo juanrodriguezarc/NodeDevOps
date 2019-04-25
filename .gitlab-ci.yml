@@ -1,9 +1,6 @@
 image: node:latest
 
 stages:
-  # - build
-  # - test
-  # - container
   - deploy
 
 cache:
