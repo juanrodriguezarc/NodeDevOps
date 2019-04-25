@@ -11,7 +11,7 @@ cache:
 install_dependencies:
   stage: build
   script:
-    - npm install
+    - npm install --prefix ./NodeDevOps/
   artifacts:
     paths:
       - node_modules/
@@ -20,6 +20,6 @@ install_dependencies:
 
 testing_testing:
   stage: test
-  script: npm test
+  script: npm test --prefix ./NodeDevOps/
   tags:
     - test
