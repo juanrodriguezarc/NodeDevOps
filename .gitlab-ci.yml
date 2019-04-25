@@ -4,6 +4,7 @@ stages:
   - build
   - test
   - container
+  - deploy
 
 cache:
   paths:
@@ -30,3 +31,16 @@ build-container:
   script: docker build -t registry.gitlab.com/juanrodriguezarc/nodedevops . && docker push registry.gitlab.com/juanrodriguezarc/nodedevops
   tags:
     - docker
+
+deploy-heroku:
+  stage: deploy
+  script: docker login --username=_ --password=1502b53d-72ed-4218-941d-d95595a12c24 registry.heroku.com && docker build -t registry.heroku.com/fierce-temple-56849/web . && docker push registry.heroku.com/fierce-temple-56849/web
+  tags:
+    - docker
+
+
+    
+ 
+
+
+ 
